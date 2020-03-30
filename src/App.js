@@ -1,25 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import './App.scss';
+import { MemoryRouter as Router, Route } from 'react-router-dom';
+import { UserContext, User as UserObject } from './contexts/UserContext';
+import { TextComponent } from './components/TextComponent';
 
 function App() {
+  const [user, setUser] = useState(UserObject);
+  const UserState = { user, setUser };
+  const [login, setLogin] = useState(false);
+  const Login = { login, setLogin };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <UserContext.Provider value={{ UserState, Login }}>
+          <Route path='/' exact component={TextComponent} />
+        </UserContext.Provider>
+      </div>
+    </Router>
   );
 }
 
