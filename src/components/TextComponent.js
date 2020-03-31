@@ -16,7 +16,6 @@ export const TextComponent = () => {
           placeholder: 'Hello, write here',
           autosave: {
             enabled: true,
-            uniqueId: 'MyUniqueID',
             delay: 1000,
             submit_delay: 5000,
             timeFormat: {
