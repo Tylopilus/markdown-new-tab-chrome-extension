@@ -10,12 +10,13 @@ export const TextComponent = () => {
       <SimpleMDE
         className='textComponent'
         options={{
-          autofocus: false,
+          autofocus: true,
           spellChecker: false,
           toolbar: false,
           placeholder: 'Hello, write here',
           autosave: {
             enabled: true,
+            uniqueId: 'mdeID',
             delay: 1000,
             submit_delay: 5000,
             timeFormat: {
