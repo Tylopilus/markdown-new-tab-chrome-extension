@@ -1,21 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.scss';
-import { MemoryRouter as Router, Route } from 'react-router-dom';
-import { UserContext, User as UserObject } from './contexts/UserContext';
+import { MemoryRouter as Router } from 'react-router-dom';
 import { TextComponent } from './components/TextComponent';
+import { Menu } from './components/Menu.tsx';
 
 function App() {
-  const [user, setUser] = useState(UserObject);
-  const UserState = { user, setUser };
-  const [login, setLogin] = useState(false);
-  const Login = { login, setLogin };
   return (
     <Router>
-      <div>
-        <UserContext.Provider value={{ UserState, Login }}>
-          <Route path='/' exact component={TextComponent} />
-        </UserContext.Provider>
-      </div>
+      <main>
+        <Menu />
+        <TextComponent />
+      </main>
     </Router>
   );
 }
