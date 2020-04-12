@@ -1,5 +1,33 @@
 .side {
-  width: 25%;
+  width: 220px;
+  min-width: 220px;
   margin-left: 2em;
   margin-top: 3em;
+}
+
+.flexContainer {
+  display: flex;
+}
+.headline {
+  display: inline-block;
+  padding: 0.5em;
+  width: 100%;
+  font-size: 1em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.activated {
+  align-self: center;
+  padding-bottom: 0.25em;
+  &::before {
+    content: '> ';
+    color: aqua;
+    font-size: 1em;
+    font-weight: bolder;
+  }
+}
+.icon {
+  padding: 0.5em;
 }

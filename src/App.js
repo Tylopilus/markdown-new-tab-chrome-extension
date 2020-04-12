@@ -6,27 +6,35 @@ import { Menu } from './components/Menu.tsx';
 import { Context } from './context';
 
 function App() {
-  const [obj, setObj] = useState(undefined);
+  const [obj, setObj] = useState([]);
+
   useEffect(() => {
-    //setObj(JSON.parse(localStorage.getItem('sheets')));
+    const obj = JSON.parse(localStorage.getItem('sheets'));
 
-    const obj2 = [
-      {
-        id: 0,
-        headline: 'abc',
-        content: 'this is content of page1',
-      },
-      {
-        id: 1,
-        headline: 'page2',
-        content: 'this is content of page 2',
-      },
-    ];
+    if (obj) setObj(obj);
+    else setObj([{ id: 0, content: '', headline: 'page1' }]);
 
-    setObj(obj2);
+    // const obj2 = [
+    //   {
+    //     id: 0,
+    //     headline: 'abc',
+    //     content: 'this is content of page1',
+    //   },
+    //   {
+    //     id: 1,
+    //     headline: 'page2',
+    //     content: 'this is content of page 2',
+    //   },
+    // ];
+
+    // setObj(obj2);
 
     // localStorage.setItem('sheets', JSON.stringify(obj2));
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('sheets', JSON.stringify(obj));
+  }, [obj]);
   const [getID, setID] = useState(0);
 
   return (
@@ -34,8 +42,12 @@ function App() {
       <main>
         <Context.Provider value={{ getID, setID, obj, setObj }}>
           <Menu />
-          {obj && (
-            <TextComponent content={obj[0].content ? obj[0].content : ''} />
+          {obj.length && (
+            <TextComponent
+              // content={obj[getID].content ? obj[getID].content : ''}
+              content=''
+              obj={obj}
+            />
           )}
         </Context.Provider>
       </main>

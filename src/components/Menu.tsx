@@ -1,50 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
 import './Menu.scss';
 import { Context } from '../context';
 
 export const Menu: React.FC = () => {
-  const { setID, obj } = useContext<any>(Context);
-  //const [object, setObject] = useState<any[]>();
-  // useEffect(() => {
-  //   const obj = [
-  //     {
-  //       id: 0,
-  //       headline: 'page1',
-  //       content: 'Content of Page 1',
-  //     },
-  //     {
-  //       id: 1,
-  //       headline: 'page2',
-  //       content: 'Content of Page 2\n',
-  //     },
-  //   ];
-  //   localStorage.clear();
-  //   localStorage.setItem('sheets', JSON.stringify(obj));
-  // }, []);
-
-  // useEffect(() => {
-  //   const objStr = localStorage.getItem('sheets');
-  //   let obj2: any[] = [];
-  //   if (objStr) obj2 = JSON.parse(objStr);
-  //   setObject(obj2);
-  // }, []);
+  const { obj } = useContext<any>(Context);
 
   return (
     <div className='side'>
-      <MenuEntry title='+ Create new Page' initial={true}></MenuEntry>
-      {/* <MenuEntry title='Welt' onClick={() => console.log(object)}></MenuEntry> */}
+      <MenuEntry title='Create new Page' initial={true} />
       {obj &&
         obj.map((o: any) => {
-          return (
-            <MenuEntry
-              key={o.id}
-              title={o.headline}
-              onClick={() => {
-                setID(o.id);
-              }}
-              id={o.id}
-            />
-          );
+          return <MenuEntry key={'menu' + o.id} title={o.headline} id={o.id} />;
         })}
     </div>
   );
@@ -56,19 +24,54 @@ interface Props {
   initial?: boolean;
   id?: number;
 }
-export const MenuEntry: React.FC<Props> = ({ title, onClick, initial, id }) => {
-  const { setValue } = useContext<any>(Context);
-  const popLists = () => {
-    const objStr = localStorage.getItem('sheets');
-    let obj = [];
-    if (objStr) obj = JSON.parse(objStr);
-    setValue(obj[1].content);
+export const MenuEntry: React.FC<Props> = ({ title, initial, id }) => {
+  const { setID, setObj, obj, getID } = useContext<any>(Context);
+
+  const createNewPage = () => {
+    const id = obj[obj.length - 1].id + 1;
+    setObj([
+      ...obj,
+      {
+        id,
+        content: '',
+        headline: 'Untitled',
+      },
+    ]);
+
+    setID(id);
   };
 
   return (
-    <div onClick={initial ? popLists : onClick} style={{ cursor: 'pointer' }}>
-      <div style={{ padding: '.5em' }}>{title}</div>
-      <div style={{ borderBottom: '1px solid black' }} />
+    <div
+      onClick={initial ? createNewPage : undefined}
+      style={{ cursor: 'pointer' }}
+    >
+      <div className='flexContainer'>
+        {getID === id ? <div className='activated' /> : null}
+        <div
+          className={getID === id ? 'headline' : 'headline'}
+          onClick={() => setID(id)}
+        >
+          {title}
+        </div>
+        {id ? (
+          <div
+            className='icon'
+            onClick={() => {
+              const newObj = obj.filter((el: any) => el.id !== id);
+              if (getID === id && id) setID(id - 1);
+              setObj(newObj);
+            }}
+          >
+            <FontAwesomeIcon icon={faTrashAlt}></FontAwesomeIcon>
+          </div>
+        ) : null}
+        {initial ? (
+          <div className='icon'>
+            <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 };
