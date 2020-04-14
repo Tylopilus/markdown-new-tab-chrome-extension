@@ -1,12 +1,15 @@
 {
   "short_name": "New Tab Markdown",
   "name": "New Tab Markdown",
-  "version": "1.0",
+  "version": "1.0.1",
   "author": "Helge Ahrens",
   "description": "Store your thoughts, todos, goals easily on every tab.",
   "manifest_version": 2,
   "browser_action": {},
   "chrome_url_overrides": {
     "newtab": "index.html"
+  },
+  "icons": {
+    "128": "logo128.png"
   }
 }
