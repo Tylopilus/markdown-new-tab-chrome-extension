@@ -6,7 +6,7 @@ import { Menu } from './components/Menu.tsx';
 import { Context } from './context';
 
 function App() {
-  const [obj, setObj] = useState([]);
+  const [obj, setObj] = useState();
 
   useEffect(() => {
     const obj = JSON.parse(localStorage.getItem('sheets'));
@@ -33,7 +33,9 @@ function App() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('sheets', JSON.stringify(obj));
+    if(obj && obj[0].content)
+      localStorage.setItem('sheets', JSON.stringify(obj));
+
   }, [obj]);
   const [getID, setID] = useState(0);
 
@@ -42,7 +44,7 @@ function App() {
       <main>
         <Context.Provider value={{ getID, setID, obj, setObj }}>
           <Menu />
-          {obj.length && (
+          {obj && (
             <TextComponent
               // content={obj[getID].content ? obj[getID].content : ''}
               content=''
