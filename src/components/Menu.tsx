@@ -48,19 +48,27 @@ export const MenuEntry: React.FC<Props> = ({ title, initial, id }) => {
     >
       <div className='flexContainer'>
         {getID === id ? <div className='activated' /> : null}
-        <div
-          className={getID === id ? 'headline' : 'headline'}
-          onClick={() => setID(id)}
-        >
+        <div className='headline' onClick={() => setID(id)}>
           {title}
         </div>
-        {id ? (
+        {id !== undefined ? (
           <div
             className='icon'
             onClick={() => {
               const newObj = obj.filter((el: any) => el.id !== id);
-              if (getID === id && id) setID(id - 1);
-              setObj(newObj);
+              if (newObj.length > 0) {
+                if (getID === id && id !== undefined) setID(id - 1);
+                setObj(newObj);
+              } else {
+                setObj([
+                  {
+                    id: 0,
+                    content: '',
+                    headline: 'Untitled',
+                  },
+                ]);
+                setID(0);
+              }
             }}
           >
             <FontAwesomeIcon icon={faTrashAlt}></FontAwesomeIcon>
