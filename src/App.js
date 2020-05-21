@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import './App.scss';
-import { MemoryRouter as Router } from 'react-router-dom';
-import { TextComponent } from './components/TextComponent';
-import { Menu } from './components/Menu.tsx';
-import { Context } from './context';
+import React, { useState, useEffect } from "react";
+import "./App.scss";
+import { MemoryRouter as Router } from "react-router-dom";
+import { TextComponent } from "./components/TextComponent";
+import { Menu } from "./components/Menu.tsx";
+import { Context } from "./context";
 
 function App() {
   const [obj, setObj] = useState();
 
   useEffect(() => {
-    const obj = JSON.parse(localStorage.getItem('sheets'));
+    const obj = JSON.parse(localStorage.getItem("sheets"));
 
-    if (obj) setObj(obj);
-    else setObj([{ id: 0, content: '', headline: 'page1' }]);
+    if (obj) {
+      setObj(obj);
+      setID(obj[0].id);
+    } else setObj([{ id: 0, content: "", headline: "page1" }]);
 
     // const obj2 = [
     //   {
@@ -33,9 +35,8 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if(obj && obj[0].content)
-      localStorage.setItem('sheets', JSON.stringify(obj));
-
+    if (obj && obj[0].content)
+      localStorage.setItem("sheets", JSON.stringify(obj));
   }, [obj]);
   const [getID, setID] = useState(0);
 
@@ -47,7 +48,7 @@ function App() {
           {obj && (
             <TextComponent
               // content={obj[getID].content ? obj[getID].content : ''}
-              content=''
+              content=""
               obj={obj}
             />
           )}
