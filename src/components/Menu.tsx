@@ -1,18 +1,23 @@
-import React, { useContext } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
-import './Menu.scss';
-import { Context } from '../context';
+import React, { useContext } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
+import "./Menu.scss";
+import { Context } from "../context";
 
+interface Object {
+  id: number;
+  headline: string;
+  content: string;
+}
 export const Menu: React.FC = () => {
   const { obj } = useContext<any>(Context);
 
   return (
-    <div className='side'>
-      <MenuEntry title='Create new Page' initial={true} />
+    <div className="side">
+      <MenuEntry title="Create new Page" initial={true} />
       {obj &&
-        obj.map((o: any) => {
-          return <MenuEntry key={'menu' + o.id} title={o.headline} id={o.id} />;
+        obj.map((o: Object) => {
+          return <MenuEntry key={"menu" + o.id} title={o.headline} id={o.id} />;
         })}
     </div>
   );
@@ -24,7 +29,7 @@ interface Props {
   initial?: boolean;
   id?: number;
 }
-export const MenuEntry: React.FC<Props> = ({ title, initial, id }) => {
+export const MenuEntry: React.FC<Props> = ({ title, initial, id }):JSX.Element => {
   const { setID, setObj, obj, getID } = useContext<any>(Context);
 
   const createNewPage = () => {
@@ -33,8 +38,8 @@ export const MenuEntry: React.FC<Props> = ({ title, initial, id }) => {
       ...obj,
       {
         id,
-        content: '',
-        headline: 'Untitled',
+        content: "",
+        headline: "Untitled",
       },
     ]);
 
@@ -44,16 +49,16 @@ export const MenuEntry: React.FC<Props> = ({ title, initial, id }) => {
   return (
     <div
       onClick={initial ? createNewPage : undefined}
-      style={{ cursor: 'pointer' }}
+      style={{ cursor: "pointer" }}
     >
-      <div className='flexContainer'>
-        {getID === id ? <div className='activated' /> : null}
-        <div className='headline' onClick={() => setID(id)}>
+      <div className="flexContainer">
+        {getID === id ? <div className="activated" /> : null}
+        <div className="headline" onClick={() => setID(id)}>
           {title}
         </div>
         {id !== undefined ? (
           <div
-            className='icon'
+            className="icon"
             onClick={() => {
               const newObj = obj.filter((el: any) => el.id !== id);
               if (newObj.length > 0) {
@@ -63,8 +68,8 @@ export const MenuEntry: React.FC<Props> = ({ title, initial, id }) => {
                 setObj([
                   {
                     id: 0,
-                    content: '',
-                    headline: 'Untitled',
+                    content: "",
+                    headline: "Untitled",
                   },
                 ]);
                 setID(0);
@@ -75,7 +80,7 @@ export const MenuEntry: React.FC<Props> = ({ title, initial, id }) => {
           </div>
         ) : null}
         {initial ? (
-          <div className='icon'>
+          <div className="icon">
             <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
           </div>
         ) : null}
