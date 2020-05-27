@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
 import "./Menu.scss";
@@ -8,6 +8,7 @@ interface Object {
   id: number;
   headline: string;
   content: string;
+  dragging?: boolean;
 }
 export const Menu: React.FC = () => {
   const { obj } = useContext<any>(Context);
@@ -17,7 +18,14 @@ export const Menu: React.FC = () => {
       <MenuEntry title="Create new Page" initial={true} />
       {obj &&
         obj.map((o: Object) => {
-          return <MenuEntry key={"menu" + o.id} title={o.headline} id={o.id} />;
+          return (
+            <MenuEntry
+              key={"menu" + o.id}
+              title={o.headline}
+              id={o.id}
+              dragging={true}
+            />
+          );
         })}
     </div>
   );
@@ -28,8 +36,15 @@ interface Props {
   onClick?: () => void;
   initial?: boolean;
   id?: number;
+  dragging?: boolean;
 }
-export const MenuEntry: React.FC<Props> = ({ title, initial, id }):JSX.Element => {
+export const MenuEntry: React.FC<Props> = ({
+  title,
+  initial,
+  id,
+  dragging,
+}): JSX.Element => {
+  const [isDragging, setDragging] = useState(false);
   const { setID, setObj, obj, getID } = useContext<any>(Context);
 
   const createNewPage = () => {
@@ -50,6 +65,10 @@ export const MenuEntry: React.FC<Props> = ({ title, initial, id }):JSX.Element =
     <div
       onClick={initial ? createNewPage : undefined}
       style={{ cursor: "pointer" }}
+      draggable={dragging}
+      onDragStart={(_) => setDragging(true)}
+      onDragEnd={(_) => setDragging(false)}
+      className={isDragging ? "dragging" : undefined}
     >
       <div className="flexContainer">
         {getID === id ? <div className="activated" /> : null}

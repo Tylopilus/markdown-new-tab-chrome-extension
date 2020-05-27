@@ -5,6 +5,11 @@
   margin-top: 3em;
 }
 
+.dragging {
+  opacity: 0.5;
+  border: 1px solid red;
+}
+
 .flexContainer {
   display: flex;
 }
@@ -22,7 +27,7 @@
   align-self: center;
   padding-bottom: 0.25em;
   &::before {
-    content: '> ';
+    content: "> ";
     color: aqua;
     font-size: 1em;
     font-weight: bolder;
