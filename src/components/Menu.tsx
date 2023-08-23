@@ -1,8 +1,15 @@
-import React, { useContext, useState } from "react";
+import { faPlus, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
+import { useActiveId } from "../context";
+import {
+  addEntry,
+  deleteEntryById,
+  Entry,
+  getEntries,
+  useEntries,
+} from "../store";
 import "./Menu.scss";
-import { Context } from "../context";
 
 interface Object {
   id: number;
@@ -11,19 +18,21 @@ interface Object {
   dragging?: boolean;
 }
 export const Menu: React.FC = () => {
-  const { obj } = useContext<any>(Context);
+  const [activeId] = useActiveId();
+  const obj = useEntries();
 
   return (
     <div className="side">
-      <MenuEntry title="Create new Page" initial={true} />
+      <MenuEntry title="New Page" initial={true} id={-1} activeId={activeId} />
       {obj &&
         obj.map((o: Object) => {
           return (
             <MenuEntry
-              key={"menu" + o.id}
-              title={o.headline}
+              key={o.id}
               id={o.id}
-              dragging={true}
+              title={o.headline}
+              initial={false}
+              activeId={activeId}
             />
           );
         })}
@@ -32,67 +41,70 @@ export const Menu: React.FC = () => {
 };
 
 interface Props {
-  title: string;
+  title?: string;
   onClick?: () => void;
   initial?: boolean;
-  id?: number;
-  dragging?: boolean;
+  id: number;
+  activeId: number;
 }
 export const MenuEntry: React.FC<Props> = ({
   title,
   initial,
   id,
-  dragging,
+  activeId,
 }): JSX.Element => {
-  const [isDragging, setDragging] = useState(false);
-  const { setID, setObj, obj, getID } = useContext<any>(Context);
+  const [, setActiveId] = useActiveId();
 
   const createNewPage = () => {
-    const id = obj[obj.length - 1].id + 1;
-    setObj([
-      ...obj,
-      {
-        id,
-        content: "",
-        headline: "Untitled",
-      },
-    ]);
-
-    setID(id);
+    const _id = getEntries()[getEntries().length - 1]?.id + 1;
+    const entry: Entry = {
+      id: _id || 0,
+      content: "",
+      headline: "Untitled",
+    };
+    addEntry(entry);
+    setActiveId(entry.id);
   };
+
+  function getIndexOfEntryById(id: number): number {
+    const entries = getEntries();
+    for (let i = 0; i < entries.length; i++) {
+      if (entries[i].id === id) {
+        return i;
+      }
+    }
+    return -1;
+  }
 
   return (
     <div
       onClick={initial ? createNewPage : undefined}
       style={{ cursor: "pointer" }}
-      draggable={dragging}
-      onDragStart={(_) => setDragging(true)}
-      onDragEnd={(_) => setDragging(false)}
-      className={isDragging ? "dragging" : undefined}
     >
       <div className="flexContainer">
-        {getID === id ? <div className="activated" /> : null}
-        <div className="headline" onClick={() => setID(id)}>
+        {activeId === id ? <div className="activated" /> : null}
+        <div
+          className="headline"
+          onClick={() => {
+            setActiveId(id ?? 0);
+          }}
+        >
           {title}
         </div>
-        {id !== undefined ? (
+        {id >= 0 ? (
           <div
             className="icon"
             onClick={() => {
-              const newObj = obj.filter((el: any) => el.id !== id);
-              if (newObj.length > 0) {
-                if (getID === id && id !== undefined) setID(id - 1);
-                setObj(newObj);
-              } else {
-                setObj([
-                  {
-                    id: 0,
-                    content: "",
-                    headline: "Untitled",
-                  },
-                ]);
-                setID(0);
+              const entries = getEntries();
+              if (activeId === id) {
+                const indexInEntries = getIndexOfEntryById(id);
+                if (indexInEntries > 0) {
+                  setActiveId(entries[indexInEntries - 1].id);
+                } else {
+                  setActiveId(entries[1].id);
+                }
               }
+              deleteEntryById(id);
             }}
           >
             <FontAwesomeIcon icon={faTrashAlt}></FontAwesomeIcon>

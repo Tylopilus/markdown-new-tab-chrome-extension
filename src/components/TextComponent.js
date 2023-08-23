@@ -2,45 +2,26 @@ import React, { useState, useEffect, useContext } from 'react';
 import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import './TextComponent.scss';
-import { Context } from '../context';
+import { Context, useActiveId } from '../context';
+import { useEntry, addEntry } from '../store';
 
 export const TextComponent = (props) => {
-  const [context, setContext] = useState(props.content);
+  const [id] = useActiveId();
+  const entry = useEntry();
 
-  const { getID, setObj } = useContext(Context);
-
-  useEffect(() => {
-    setObj(
-      props.obj.map((item) => {
-        const headline = context.split('\n')[0]
-          ? context.split('\n')[0].replace(/#+\s/, '')
-          : 'Untitled';
-        return item.id === getID
-          ? { ...item, content: context, headline }
-          : item;
-      })
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [context]);
-
-  useEffect(() => {
-    props.obj.forEach((el) => {
-      if (el.id === getID) setContext(el.content);
-    });
-    // setContext(props.obj[getID].content);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getID]);
-
+  console.log({entry});
   const changeHandler = (e) => {
-    setContext(e);
+    const headline = e.split('\n')[0].replace('# ', '');
+
+    addEntry({ id, content: e, headline });
   };
+
   return (
-    <div className='centered'>
+    <div className="centered">
       <SimpleMDE
         // changing key forces a re-render of the component. Changing value does not trigger a re-render!
-        key={getID}
-        className='textComponent'
+        key={id}
+        className="textComponent"
         options={{
           autofocus: true,
           spellChecker: false,
@@ -49,7 +30,7 @@ export const TextComponent = (props) => {
           status: false,
           // etc.
         }}
-        value={context}
+        value={entry?.content ?? ''}
         onChange={changeHandler}
       />
     </div>
