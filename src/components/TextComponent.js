@@ -9,7 +9,6 @@ export const TextComponent = (props) => {
   const [id] = useActiveId();
   const entry = useEntry();
 
-  console.log({entry});
   const changeHandler = (e) => {
     const headline = e.split('\n')[0].replace('# ', '');
 
