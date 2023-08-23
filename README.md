@@ -1,5 +1,13 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# New Tab Markdown Extension
+View the extension in the [Chrome Store](https://chrome.google.com/webstore/detail/new-tab-markdown/gpdnablocagonlpfhkfiigfpfoommcia)
+
+This extensions replaces the standard about:blank with a clean slate where a user can put down notes in markdown syntax with highlighting.
+
+It is meant to simply write stuff down and have it handy in a program that is open most of the time anyways (chrome)
+
+
 ## Available Scripts
 
 In the project directory, you can run:
